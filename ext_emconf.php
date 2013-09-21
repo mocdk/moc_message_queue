@@ -10,7 +10,7 @@
 ########################################################################
 
 $EM_CONF[$_EXTKEY] = array(
-	'title' => 'MOC Event queue',
+	'title' => 'MOC Message queue',
 	'description' => 'Extension for maintaining a central message queue',
 	'category' => '',
 	'shy' => 0,
