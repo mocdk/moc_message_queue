@@ -12,7 +12,7 @@ Developer manual
 ================
 
 The extension proves a centralized way to handle asynchronous messages. The default implementation is a Beanstalk
-queue, but this can easily be changed to use redis, memcache, database or any other means of transporting text-messages.
+queue, but this can easily be changed to use redis, memcached, database or any other means of transporting text-messages.
 
 Creating your own messages
 --------------------------
@@ -79,7 +79,7 @@ Registering handlers or listeners
 ---------------------------------
 
 To register a handler for doing something whenever a message is received in the queue, simply wire a new slot to
-the signal.
+the signal emitted but the queue worker.
 
 Here is an example with an inline function
 
@@ -114,7 +114,7 @@ example that only handles messages of class MyMessage.
 
 		/**
 		 * @param \MOC\MocMessageQueue\Message\MessageInterface $message
-		 * @return
+		 * @return void
 		 */
 		public function yourMethod(\MOC\MocMessageQueue\Message\MessageInterface $message) {
 			if ($message instanceof MyMessage) {
@@ -128,7 +128,7 @@ example that only handles messages of class MyMessage.
 Implementing other backend queues
 ---------------------------------
 
-If you want to implement another queue (reddis, RabbitMQ, shared memory, or something different), you should create a
+If you want to implement another queue (redis, RabbitMQ, shared memory, or something different), you should create a
 class that implements the \MOC\MocMessageQueue\Queue\QueueInterface interface. See the BeanstalkQueue for inspiration and
 examples.
 
@@ -145,4 +145,4 @@ To register your new queue, simply change the TypoScript
 	}
 
 The TypoScript should be changed in a way that its accessible in CommandControllers (ie. in the
-ext_typoscript_Setup.txt of your extensions).
+ext_typoscript_setup.txt of your extensions).

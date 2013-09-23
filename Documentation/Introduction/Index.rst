@@ -22,14 +22,16 @@ When programming websites today, many things that are normally done during a sin
 "background" process making the request faster, and help separation concerns. A simple example of this, is a shop system
 sending an e-mail. The frontend controller does not need to know how to send an e-mail, but can instead send a message
 that it has an e-mail that it needs sending. This way, the webshop frontend controller will not need how to send an e-mail
- and the webrequest will probably be faster, since another process is responsible for actually sending the e-mail.
+and the webrequest will probably be faster, since another process is responsible for actually sending the e-mail.
 
-The messagequeue can also be used for more fancy stuff like Command Query Responsibility Segregation or just for passing
+The message queue can also be used for more fancy stuff like Command Query Responsibility Segregation or just for passing
 messages between different bounded contexts. `See this link for an explanation of CQRS`_.
 
 .. _See this link for an explanation of CQRS: http://martinfowler.com/bliki/CQRS.html
 
-The queue is abstract and includes a Beanstalk implementation, but can easily be changed to different implementations.
+The queue is abstract and includes a Beanstalk implementation, but can easily be extend to support different underlying
+message queue implementations. A database driven implementation is planned, so the extension can be used without any
+underlying messaging layer.
 
 Architecture
 ------------
