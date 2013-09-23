@@ -3,6 +3,7 @@ namespace MOC\MocMessageQueue\Command;
 
 use MOC\MocMessageQueue\Message\MessageInterface;
 use MOC\MocMessageQueue\Message\StringMessage;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\CommandController;
 
 /**
@@ -45,11 +46,18 @@ class QueueWorkerCommandController extends CommandController {
 		}
 
 		while (TRUE) {
-			$message = $this->queue->waitAndReserve();
-			$this->signalSlotDispatcher->dispatch(__CLASS__, 'messageReceived', array(
-				'message' => $message
-			));
-			$this->queue->finish($message);
+			try {
+				$message = $this->queue->waitAndReserve();
+				$this->signalSlotDispatcher->dispatch(__CLASS__, 'messageReceived', array(
+					'message' => $message
+				));
+				$this->queue->finish($message);
+			} catch (\Exception $exception) {
+				if ($debugOutput) {
+					print ' - Error handling message:' . $exception->getMessage() . PHP_EOL;
+				}
+				GeneralUtility::devLog('Error handling message:' . $exception->getMessage(), 'moc_message_queue');
+			}
 		}
 	}
 

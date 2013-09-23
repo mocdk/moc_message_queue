@@ -2,6 +2,7 @@
 namespace MOC\MocMessageQueue\Queue;
 
 use MOC\MocMessageQueue\Message\MessageInterface;
+use MOC\MocNewsSending\MailerService\UnknownMailerServiceException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -54,7 +55,8 @@ class BeanstalkQueue implements QueueInterface {
 	 * When the message is properly handled, the finish method is called.
 	 *
 	 * @param integer $timeout The timeout in seconds. NULL means forever
-	 * @return ˜MOC\MocMessageQueue\Message\MessageInterface
+	 * @return \MOC\MocMessageQueue\Message\MessageInterface
+	 * @throws \MOC\MocMessageQueue\Queue\UnknownMailerServiceException
 	 */
 	public function waitAndReserve($timeout = NULL) {
 		if ($timeout === NULL) {
@@ -65,7 +67,11 @@ class BeanstalkQueue implements QueueInterface {
 			return NULL;
 		}
 		$message = unserialize($pheanstalkJob->getData());
-			// @todo validate that the messageinterface is actually implemented!
+
+		if (!($message instanceof MessageInterface)) {
+			$this->pheanstalk->delete($pheanstalkJob);
+			throw new UnknownMailerServiceException('The message queue tried to fetch a message from the queue that did not implement the correct Message interface. Message permanently removed. The de-serialized class is ' . get_class($message));
+		}
 
 		$message->setIdentifier($pheanstalkJob->getId());
 		return $message;
