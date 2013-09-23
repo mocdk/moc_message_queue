@@ -1,0 +1,5 @@
+#cat=Event/; type=string; Label=Beanstalk server: The servername or IP of the beanstalk server.
+beanstalk_server = 127.0.0.1
+
+#cat=Event/; type=string; Label=Beanstalk tube: Specify which tube to use for events.
+beanstalk_tube = moc_message_queue

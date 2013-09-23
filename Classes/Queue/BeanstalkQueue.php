@@ -21,7 +21,7 @@ class BeanstalkQueue implements QueueInterface {
 	/**
 	 * @var string
 	 */
-	public static $tube = 'moc_event_queue';
+	public static $tube = 'moc_message_queue';
 
 	/**
 	 * @var \Pheanstalk_Pheanstalk
