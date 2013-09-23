@@ -11,7 +11,7 @@
 
 $EM_CONF[$_EXTKEY] = array(
 	'title' => 'MOC Message queue',
-	'description' => 'Extension for maintaining a central message queue',
+	'description' => 'Extension for maintaining a central message queue. Bundles with a beanstalk implementation of the messaging layer.',
 	'category' => '',
 	'shy' => 0,
 	'version' => '1.0',
@@ -26,7 +26,7 @@ $EM_CONF[$_EXTKEY] = array(
 	'modify_tables' => '',
 	'clearcacheonload' => 0,
 	'lockType' => '',
-	'author' => 'Jan-Erik Revsbech',
+	'author' => 'MOC A/S',
 	'author_email' => 'janerik@moc.net',
 	'author_company' => 'MOC A/S',
 	'constraints' => array(

@@ -5,9 +5,10 @@ use MOC\MocMessageQueue\Message\MessageInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
- * Beanstalk implementation of MOC message queue queue interface
+ * Beanstalk implementation of MOC message queue interface
  *
- * This class requires Pheanstalk (is bundled with the extensions)
+ * This class requires Pheanstalk (which is bundled with the extensions)
+ *
  * @package MOC\MocMessageQueue
  */
 class BeanstalkQueue implements QueueInterface {
@@ -27,29 +28,33 @@ class BeanstalkQueue implements QueueInterface {
 	 */
 	protected $pheanstalk;
 
+	/**
+	 * Constructor
+	 */
 	public function __construct() {
 		$this->pheanstalk = new \Pheanstalk_Pheanstalk(static::$server);
 		$this->pheanstalk->useTube(static::$tube);
 	}
 
 	/**
-	 * Publish a message in the messagequeue
+	 * Publish a message in the message queue
 	 *
 	 * @param MessageInterface $message
 	 * @return boolean Return TRUE if the message was successfully published
 	 */
 	public function publish(MessageInterface $message) {
 		$message->setIdentifier($this->pheanstalk->put(serialize($message)));
-		GeneralUtility::devLog('Publishing message ' . get_class($message) . ' via beanstalk.', 'moc_messagequeue');
+		GeneralUtility::devLog('Publishing message ' . get_class($message) . ' via beanstalk.', 'moc_message_queue');
+		return TRUE;
 	}
 
 	/**
 	 * Wait until a message is available and reserve that message for processing
 	 *
-	 * When the message is properly handled, the finish method
+	 * When the message is properly handled, the finish method is called.
 	 *
 	 * @param integer $timeout The timeout in seconds. NULL means forever
-	 * @return MOC\MocMessageQueue\Message\MessageInterface
+	 * @return ˜MOC\MocMessageQueue\Message\MessageInterface
 	 */
 	public function waitAndReserve($timeout = NULL) {
 		if ($timeout === NULL) {
@@ -60,7 +65,8 @@ class BeanstalkQueue implements QueueInterface {
 			return NULL;
 		}
 		$message = unserialize($pheanstalkJob->getData());
-		// @todo validate that the messageinterface is actually implemented!
+			// @todo validate that the messageinterface is actually implemented!
+
 		$message->setIdentifier($pheanstalkJob->getId());
 		return $message;
 	}
@@ -71,11 +77,11 @@ class BeanstalkQueue implements QueueInterface {
 	 * This must be called for every message that was reserved and that was
 	 * processed successfully.
 	 *
+	 * @param MessageInterface $message
 	 * @return boolean TRUE if the message could be removed
 	 */
 	public function finish(MessageInterface $message) {
-		$job = $this->pheanstalk->peek($message->getIdentifier());
-		$this->pheanstalk->delete($job);
+		$this->pheanstalk->delete($this->pheanstalk->peek($message->getIdentifier()));
 		return TRUE;
 	}
 

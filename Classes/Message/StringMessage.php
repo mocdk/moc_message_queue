@@ -1,6 +1,13 @@
 <?php
 namespace MOC\MocMessageQueue\Message;
 
+/**
+ * Simple String based message for the message queue systems
+ *
+ * This message holds a simple string payload. It is primarily used for testing purposes.
+ *
+ * @package MOC\MocMessageQueue
+ */
 class StringMessage extends AbstractMessage implements MessageInterface {
 
 	/**
@@ -9,7 +16,7 @@ class StringMessage extends AbstractMessage implements MessageInterface {
 	protected $payload;
 
 	/**
-	 * @param $payload
+	 * @param string $payload
 	 */
 	public function __construct($payload) {
 		$this->payload = $payload;

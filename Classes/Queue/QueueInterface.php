@@ -4,14 +4,14 @@ namespace MOC\MocMessageQueue\Queue;
 use MOC\MocMessageQueue\Message\MessageInterface;
 
 /**
- * Interface for a Messagequeue
+ * Interface for a message queue
  *
  * @package MOC\MocMessageQueue
  */
 interface QueueInterface {
 
 	/**
-	 * Publish a message in the messagequeue
+	 * Publish a message in the message queue
 	 *
 	 * @param MessageInterface $message
 	 * @return boolean Return TRUE if the message was successfully published
@@ -24,7 +24,7 @@ interface QueueInterface {
 	 * When the message is properly handled, the finish method
 	 *
 	 * @param integer $timeout The timeout in seconds. NULL means forever
-	 * @return MOC\MocMessageQueue\Message\MessageInterface
+	 * @return \MOC\MocMessageQueue\Message\MessageInterface
 	 */
 	public function waitAndReserve($timeout = NULL);
 
