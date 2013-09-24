@@ -1,4 +1,4 @@
-#cat=Event/; type=string; Label=Beanstalk server: The servername or IP of the beanstalk server.
+#cat=Event/; type=string; Label=Beanstalk server: The server name or IP of the beanstalk server.
 beanstalk_server = 127.0.0.1
 
 #cat=Event/; type=string; Label=Beanstalk tube: Specify which tube to use for events.

@@ -34,7 +34,6 @@ class QueueWorkerCommandController extends CommandController {
 	 * @return void
 	 */
 	public function startCommand($debugOutput = FALSE) {
-
 		if ($debugOutput) {
 			$this->signalSlotDispatcher->connect(__CLASS__, 'messageReceived', function(MessageInterface $message) {
 				print 'Message received: ' . get_class($message);
@@ -73,4 +72,5 @@ class QueueWorkerCommandController extends CommandController {
 		$message = new StringMessage($messageString);
 		$this->queue->publish($message);
 	}
+
 }

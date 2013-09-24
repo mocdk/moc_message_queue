@@ -1,4 +1,7 @@
 <?php
+if (!defined('TYPO3_MODE')) {
+	die('Access denied.');
+}
 
 $config = unserialize($_EXTCONF);
 \MOC\MocMessageQueue\Queue\BeanstalkQueue::$server = $config['beanstalk_server'];
