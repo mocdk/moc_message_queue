@@ -18,6 +18,7 @@ dispatching is done with SignalSlots as explained in the section on Architecture
 The worker command is is started from the command line by issuing the cli_dispatch command
 
 ::
+
 	typo3/cli_dispatch.phpsh extbase queueworker:start
 
 The command will run forever, and process messages as they are available in the queue. You should start this script

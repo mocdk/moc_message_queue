@@ -31,8 +31,8 @@ $EM_CONF[$_EXTKEY] = array(
 	'author_company' => 'MOC A/S',
 	'constraints' => array(
 		'depends' => array(
-			'typo3' => '6.0',
-			'extbase' => '6.0'
+			'typo3' => '6.0.0-6.1.99',
+			'extbase' => '6.0.0-6.1.99'
 		),
 		'conflicts' => array(
 		),
