@@ -1,7 +1,0 @@
-config.tx_extbase {
-	objects {
-		MOC\MocMessageQueue\Queue\QueueInterface {
-			className = MOC\MocMessageQueue\Queue\BeanstalkQueue
-		}
-	}
-}

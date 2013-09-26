@@ -6,7 +6,7 @@
 .. include:: ../Includes.txt
 
 
-.. _users-manual:
+.. _developer-manual:
 
 Developer manual
 ================
@@ -146,3 +146,10 @@ To register your new queue, simply change the TypoScript
 
 The TypoScript should be changed in a way that its accessible in CommandControllers (ie. in the
 ext_typoscript_setup.txt of your extensions).
+
+More examples
+-------------
+
+To see more examples see the `MOC Mailer extension on Github`_
+
+.. _MOC Mailer extension on Github: https://github.com/mocdk/moc_mailer

@@ -35,6 +35,7 @@ class QueueWorkerCommandController extends CommandController {
 	 */
 	public function startCommand($debugOutput = FALSE) {
 		if ($debugOutput) {
+			print 'Starting up queue worker with implementation ' . get_class($this->queue) . PHP_EOL;
 			$this->signalSlotDispatcher->connect(__CLASS__, 'messageReceived', function(MessageInterface $message) {
 				print 'Message received: ' . get_class($message);
 				if ($message instanceof StringMessage) {
@@ -47,10 +48,12 @@ class QueueWorkerCommandController extends CommandController {
 		while (TRUE) {
 			try {
 				$message = $this->queue->waitAndReserve();
-				$this->signalSlotDispatcher->dispatch(__CLASS__, 'messageReceived', array(
-					'message' => $message
-				));
-				$this->queue->finish($message);
+				if ($message !== NULL) {
+					$this->signalSlotDispatcher->dispatch(__CLASS__, 'messageReceived', array(
+						'message' => $message
+					));
+					$this->queue->finish($message);
+				}
 			} catch (\Exception $exception) {
 				if ($debugOutput) {
 					print ' - Error handling message:' . $exception->getMessage() . PHP_EOL;

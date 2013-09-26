@@ -1,5 +1,12 @@
-#cat=Event/; type=string; Label=Beanstalk server: The server name or IP of the beanstalk server.
+#cat=basic/10; type=options[Database,Beanstalk]; Label=Default message queue implementation: Specify which message queue implementation the extension should register. This extension manager setting simply tells moc message queue which implementation to register as default. If choosing beanstalk, remember to verify the beanstalk host and tube setting as well. The option can be overwritten by setting the TypoScript setting config.tx_extbase.objects.MOC\MocMessageQueue\Queue\QueueInterface to you specific implementation.
+message_queue_implementation=Database
+
+#cat=beanstalk/10; type=boolean; Label=Disable inclusion of Pheanstalk library: If the messagequeue implementation is set to Beanstalk, the Pheanstalk PHP library is included (bundled with the extension). If you already have this library included, you can disable the import here.
+disable_pheanstalk_import = 0
+
+#cat=beanstalk/20; type=string; Label=Beanstalk server: The server name or IP of the beanstalk server.
 beanstalk_server = 127.0.0.1
 
-#cat=Event/; type=string; Label=Beanstalk tube: Specify which tube to use for events.
+#cat=beanstalk/30; type=string; Label=Beanstalk tube: Specify which tube to use for events.
 beanstalk_tube = moc_message_queue
+

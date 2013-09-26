@@ -48,6 +48,20 @@ Installation
 ------------
 
 The extensions is installed via the extension manager.
-The default queue implementation is Beanstalk, so make sure that you have a running beanstalk server, and configure
-the server name/ip-address and tube in the extension manager.
+
+The default queue is a database poll based queue implementation which should work everywhere. This does not require any
+configuration. We suggest switching to the beanstalk backed message queue, but this requires a running beanstalk daemon.
+
+The hostname/ip and tube can be configured by the extension manager (only used if beanstalk is enabled).
+
+Choosing message queue
+----------------------
+
+The extension bundles with two different queue implementations. A database driven queue that does not require any
+external daemons or libraries, and a beanstalk version that requires beanstalk to be available. To use the beanstalk
+version, make sure you have a running beanstalk server. Then change the setting "QueueImplementation" in the extension
+manager to "Beanstalk" and verify the settings for server and tube.
+
+The Beanstalk implementation is based on the Pheanstalk php library which is bundled with the extension. If you already
+have this library included bu another extensions, you can disable the include via the extension manager.
 

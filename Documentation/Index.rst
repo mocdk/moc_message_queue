@@ -33,7 +33,7 @@ MOC Event queue
 		2013
 
 	:Author:
-		Jan-Erik Revsbech
+		MOC A/S
 
 	:Email:
 		janerik@moc.net
