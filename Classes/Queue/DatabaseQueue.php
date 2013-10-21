@@ -2,6 +2,7 @@
 namespace MOC\MocMessageQueue\Queue;
 
 use MOC\MocMessageQueue\Message\MessageInterface;
+use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -12,15 +13,30 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  *
  * @package MOC\MocMessageQueue
  */
-class DatabaseQueue implements QueueInterface {
+class DatabaseQueue implements SingletonInterface, QueueInterface {
 
 	const STATUS_NEW = 0;
 	const STATUS_RESERVED = 1;
 
 	/**
+	 * We need to hold a reference to this since we use it in the destructor. Otherwise we risk
+	 * that the object is destroyed before we are going to use it!.
+	 *
+	 * @var \TYPO3\CMS\Core\Database\DatabaseConnection
+	 */
+	protected $databaseConnection;
+
+	/**
 	 * Period between each poll when the calling waitAndReserve
 	 */
 	const SLEEP_POLL_PERIOD = 5;
+
+	/**
+	 *
+	 */
+	public function __construct() {
+		$this->databaseConnection = $GLOBALS['TYPO3_DB'];
+	}
 
 	/**
 	 * Publish a message in the message queue
@@ -29,7 +45,7 @@ class DatabaseQueue implements QueueInterface {
 	 * @return boolean Return TRUE if the message was successfully published
 	 */
 	public function publish(MessageInterface $message) {
-		$GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_mocmessagequeue_queue', array(
+		$this->databaseConnection->exec_INSERTquery('tx_mocmessagequeue_queue', array(
 			'crdate' => time(),
 			'tstamp' => time(),
 			'data' => serialize($message),
@@ -52,16 +68,16 @@ class DatabaseQueue implements QueueInterface {
 		}
 
 		while (TRUE) {
-			$rows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('uid, data', 'tx_mocmessagequeue_queue', 'status = ' . static::STATUS_NEW, '', '', 1);
+			$rows = $this->databaseConnection->exec_SELECTgetRows('uid, data', 'tx_mocmessagequeue_queue', 'status = ' . static::STATUS_NEW, '', '', 1);
 			if (count($rows) > 0) {
 				$row = $rows[0];
 				$message = unserialize($row['data']);
 				if (!($message instanceof MessageInterface)) {
-					$GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_mocmessagequeue_queue', 'uid = ' . $row['uid']);
+					$this->databaseConnection->exec_DELETEquery('tx_mocmessagequeue_queue', 'uid = ' . $row['uid']);
 					throw new UnknownMessageException('The message queue tried to fetch a message from the queue that did not implement the correct Message interface. Message permanently removed. The de-serialized class is ' . get_class($message));
 				}
 				$message->setIdentifier($row['uid']);
-				$GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_mocmessagequeue_queue', 'uid = ' . $row['uid'], array('status' => static::STATUS_RESERVED));
+				$this->databaseConnection->exec_UPDATEquery('tx_mocmessagequeue_queue', 'uid = ' . $row['uid'], array('status' => static::STATUS_RESERVED));
 				return $message;
 			}
 			sleep(static::SLEEP_POLL_PERIOD);
@@ -82,7 +98,7 @@ class DatabaseQueue implements QueueInterface {
 	 * @return boolean TRUE if the message could be removed
 	 */
 	public function finish(MessageInterface $message) {
-		$GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_mocmessagequeue_queue', 'uid = ' . $message->getIdentifier());
+		$this->databaseConnection->exec_DELETEquery('tx_mocmessagequeue_queue', 'uid = ' . $message->getIdentifier());
 		return TRUE;
 	}
 
@@ -92,7 +108,7 @@ class DatabaseQueue implements QueueInterface {
 	 * @return integer
 	 */
 	public function count() {
-		return $GLOBALS['TYPO3_DB']->exec_SELECTcountRows('uid', 'tx_mocmessagequeue_queue', 'status' . static::STATUS_NEW);
+		return $this->databaseConnection->exec_SELECTcountRows('uid', 'tx_mocmessagequeue_queue', 'status' . static::STATUS_NEW);
 	}
 
 }
