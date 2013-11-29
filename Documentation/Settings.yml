@@ -10,8 +10,8 @@ conf.py:
   release: 1.0
   latex_documents:
   - - Index
-    - MOCEventqueue.tex
-    - MOC Event queue
+    - MeueueQueue.tex
+    - MOC Message Queue
     - Jan-Erik Revsbech
     - manual
   latex_elements:
