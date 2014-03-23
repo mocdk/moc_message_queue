@@ -30,14 +30,16 @@ class QueueWorkerCommandController extends CommandController {
 	/**
 	 * Run the queue in the background
 	 *
+	 * @param integer $maximumMessages If set to a number larger than o (default), only this amount of numbers are handed,
+	 * before it exits with an exit code of 9
 	 * @param boolean $debugOutput If TRUE, a slot is connected that display some debug output when a message is handled
 	 * @return void
 	 */
-	public function startCommand($debugOutput = FALSE) {
+	public function startCommand($maximumMessages = 0, $debugOutput = FALSE) {
 		if ($debugOutput) {
-			print 'Starting up queue worker with implementation ' . get_class($this->queue) . PHP_EOL;
+			print date('d/m-Y H:i:s') .  ' Starting up queue worker with implementation ' . get_class($this->queue) . PHP_EOL;
 			$this->signalSlotDispatcher->connect(__CLASS__, 'messageReceived', function(MessageInterface $message) {
-				print 'Message received: ' . get_class($message);
+				print date('d/m-Y H:i:s') .  ' Message received: ' . get_class($message);
 				if ($message instanceof StringMessage) {
 					print ' - Message ' . $message->getPayload();
 				}
@@ -45,6 +47,7 @@ class QueueWorkerCommandController extends CommandController {
 			});
 		}
 
+		$numberOfMessagesHandled = 0;
 		while (TRUE) {
 			try {
 				$message = $this->queue->waitAndReserve();
@@ -53,6 +56,11 @@ class QueueWorkerCommandController extends CommandController {
 						'message' => $message
 					));
 					$this->queue->finish($message);
+					$numberOfMessagesHandled++;
+					if ($maximumMessages > 0 && $numberOfMessagesHandled >= $maximumMessages) {
+						print date('d/m-Y H:i:s') .  ' Maximum number of messages ' . $maximumMessages . ' is reached. Exiting with exitcode 9.' . PHP_EOL;
+						$this->sendAndExit(9);
+					}
 				}
 			} catch (\Exception $exception) {
 				if ($debugOutput) {
