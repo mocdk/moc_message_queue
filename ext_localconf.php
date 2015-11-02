@@ -13,7 +13,7 @@ if ($config['message_queue_implementation'] === 'Beanstalk' && $config['disable_
 	Pheanstalk_ClassLoader::register($pheanstalkClassRoot);
 }
 
-$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['extbase']['commandControllers'][] = 'Moc\MocMessageQueue\Command\QueueWorkerCommandController';
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['extbase']['commandControllers'][] = 'MOC\MocMessageQueue\Command\QueueWorkerCommandController';
 
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTypoScriptSetup('
 config.tx_extbase {
