@@ -1,5 +1,5 @@
 {
-    "name": "moc/message-queue",
+    "name": "moc/moc-message-queue",
     "type": "typo3-cms-extension",
     "description": "Extension for maintaining a central message queue. Bundles with a beanstalk implementation of the messaging layer.",
     "homepage": "https://github.com/mocdk/moc_message_queue",
